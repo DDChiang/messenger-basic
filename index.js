@@ -24,6 +24,56 @@ function sendTextMessage(sender, text) {
 	});
 }
 
+function sendGenericMessage(sender) {
+	let messageData = {
+		"attachment": {
+			"type": "template",
+			"payload": {
+				"template_type": "generic",
+				"elements": [{
+					"title": "First card",
+					"subtitle": "Element #1 of an hscroll",
+					"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+					"buttons": [{
+						"type": "web_url",
+						"url": "https://www.messenger.com",
+						"title": "web url"
+					}, {
+						"type": "postback",
+						"title": "Postback",
+						"payload": "Payload for first element in generic bubble"
+					}, {
+						"title": "Second card",
+						"subtitle": "Element #2 of hscroll",
+						"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
+						"buttons": [{
+							"type": "postback",
+              "title": "Postback",
+              "payload": "Payload for second element in a generic bubble",
+						}]
+					}]
+				}]
+			}
+		}
+	}
+	request({
+		url: 'https://graph.facebook.com/v2.6/me/messages',
+		qs: {access_token: token},
+		method: 'POST',
+		json: {
+			recipient: {id: sender},
+			message: messageData,
+		}
+	}, function(err, res, body) {
+			if (err) {
+				console.log('Error sending messages: ', err)
+			} else if (res.body.error) {
+				console.log('Error', res.body.error);
+			}
+		}
+	})
+}
+
 app.set('port', (process.env.PORT || 5000))
 
 // Process application/x-www-form-urlencoded
@@ -53,6 +103,10 @@ app.post('/webhook/', function(req, res) {
       let sender = event.sender.id
       if (event.message && event.message.text) {
           let text = event.message.text
+          if (text === 'Generic') {
+          	sendGenericMessage(sender)
+          	continue
+          }
           sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
       }
   }
