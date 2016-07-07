@@ -42,15 +42,15 @@ function sendGenericMessage(sender) {
 						"type": "postback",
 						"title": "Postback",
 						"payload": "Payload for first element in generic bubble"
-					}, {
-						"title": "Second card",
-						"subtitle": "Element #2 of hscroll",
-						"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
-						"buttons": [{
-							"type": "postback",
-              "title": "Postback",
-              "payload": "Payload for second element in a generic bubble",
-						}]
+					}] 
+				}, {
+					"title": "Second card",
+					"subtitle": "Element #2 of hscroll",
+					"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
+					"buttons": [{
+						"type": "postback",
+            "title": "Postback",
+            "payload": "Payload for second element in a generic bubble",
 					}]
 				}]
 			}
@@ -70,7 +70,6 @@ function sendGenericMessage(sender) {
 			} else if (res.body.error) {
 				console.log('Error', res.body.error);
 			}
-		}
 	})
 }
 
