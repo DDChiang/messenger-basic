@@ -119,7 +119,7 @@ app.post('/webhook/', function(req, res) {
           	continue
           }
           if (text.tolowerCase() === 'test' || 'quiz') {
-          	sendGenericMessage(sender, 'prompt quiz')
+          	sendTextMessage(sender, 'prompt quiz')
           	continue
           }
           sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
