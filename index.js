@@ -5,6 +5,9 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 
+var quiz = require('./quiz');
+var welcomeIndex = require('./welcomeIndex');
+
 function sendTextMessage(sender, text) {
 	let messageData = {text: text}
 	request({
@@ -24,39 +27,41 @@ function sendTextMessage(sender, text) {
 	});
 }
 
-function sendGenericMessage(sender) {
-	let messageData = {
-		"attachment": {
-			"type": "template",
-			"payload": {
-				"template_type": "generic",
-				"elements": [{
-					"title": "First card",
-					"subtitle": "Element #1 of an hscroll",
-					"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
-					"buttons": [{
-						"type": "web_url",
-						"url": "https://www.messenger.com",
-						"title": "web url"
+function sendGenericMessage(sender, type) {
+	if (type==="generic") {
+		let messageData = {
+			"attachment": {
+				"type": "template",
+				"payload": {
+					"template_type": "generic",
+					"elements": [{
+						"title": "First card",
+						"subtitle": "Element #1 of an hscroll",
+						"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+						"buttons": [{
+							"type": "web_url",
+							"url": "https://www.messenger.com",
+							"title": "web url"
+						}, {
+							"type": "postback",
+							"title": "Postback",
+							"payload": "Payload for first element in generic bubble"
+						},{
+							"type": "postback",
+							"title": "Quiz of Thing",
+							"payload": "quiz"
+						}] 
 					}, {
-						"type": "postback",
-						"title": "Postback",
-						"payload": "Payload for first element in generic bubble"
-					},{
-						"type": "postback",
-						"title": "Quiz of Thing",
-						"payload": "quiz"
-					}] 
-				}, {
-					"title": "Second card",
-					"subtitle": "Element #2 of hscroll",
-					"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
-					"buttons": [{
-						"type": "postback",
-            "title": "Postback",
-            "payload": "Payload for second element in a generic bubble",
+						"title": "Second card",
+						"subtitle": "Element #2 of hscroll",
+						"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
+						"buttons": [{
+							"type": "postback",
+	            "title": "Postback",
+	            "payload": "Payload for second element in a generic bubble",
+						}]
 					}]
-				}]
+				}
 			}
 		}
 	}
@@ -87,7 +92,7 @@ app.use(bodyParser.json())
 
 // Index route
 app.get('/', function (req, res) {
-    res.send('I am a chatbot')
+    res.send(welcomeIndex())
 })
 
 // for Facebook verification
@@ -107,14 +112,14 @@ app.post('/webhook/', function(req, res) {
       if (event.message && event.message.text) {
           let text = event.message.text
           if (text === 'Generic') {
-          	sendGenericMessage(sender)
+          	sendGenericMessage(sender, 'generic')
           	continue
           }
           sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
       }
       if (event.postback) {
       	if (event.postback.payload.toLowerCase() ==="quiz") {
-      		sendTextMessage(sender, "TODO: QUIZ", token)
+      		sendTextMessage(sender, "TODO: QUIZ " + quiz, token)
       		continue
       	}
       	let text = JSON.stringify(event.postback)
