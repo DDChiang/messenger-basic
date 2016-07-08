@@ -155,7 +155,9 @@ app.post('/webhook/', function(req, res) {
 
       // if user sends media
       if (event.message && event.message.attachments) {
+      	// for emoticons error message: '(#100) No matching user found',
       	console.log('attachment');
+      	console.log(event.message);
       	console.log(event.message.attachments[0].payload);
       }
 
