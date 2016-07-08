@@ -113,12 +113,13 @@ app.post('/webhook/', function(req, res) {
       let event = req.body.entry[0].messaging[i]
       let sender = event.sender.id
       if (event.message && event.message.text) {
-          let text = event.message.text
-          if (text.toLowerCase() === 'generic') {
+          let text = event.message.text.toLowerCase()
+
+          if (text === 'generic') {
           	sendGenericMessage(sender, 'generic')
           	continue
           }
-          if (text.tolowerCase() === 'test' || 'quiz') {
+          if (text === 'test' || text === 'quiz') {
           	sendTextMessage(sender, 'prompt quiz')
           	continue
           }
