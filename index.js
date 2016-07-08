@@ -67,6 +67,7 @@ function sendGenericMessage(sender, type) {
 			}
 		}
 	}
+
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
 		qs: {access_token: token},
@@ -113,8 +114,12 @@ app.post('/webhook/', function(req, res) {
       let sender = event.sender.id
       if (event.message && event.message.text) {
           let text = event.message.text
-          if (text === 'Generic') {
+          if (text.toLowerCase() === 'generic') {
           	sendGenericMessage(sender, 'generic')
+          	continue
+          }
+          if (text.tolowerCase() === 'test' || 'quiz') {
+          	sendGenericMessage(sender, 'prompt quiz')
           	continue
           }
           sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
