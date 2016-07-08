@@ -152,7 +152,13 @@ app.post('/webhook/', function(req, res) {
       let event = req.body.entry[0].messaging[i]
       let sender = event.sender.id
       // user sends message
-      console.log(event.message);
+
+      // if user sends media
+      if (event.message.attachments) {
+      	console.log('attachment');
+      	console.log(event.message.attachments[0].payload);
+      }
+
       if (event.message && event.message.text) {
           let text = event.message.text.toLowerCase()
 
