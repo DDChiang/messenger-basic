@@ -154,7 +154,7 @@ app.post('/webhook/', function(req, res) {
       // user sends message
 
       // if user sends media
-      if (event.message.attachments) {
+      if (event.message && event.message.attachments) {
       	console.log('attachment');
       	console.log(event.message.attachments[0].payload);
       }
