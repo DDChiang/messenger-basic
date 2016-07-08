@@ -80,7 +80,7 @@ function sendGenericMessage(sender, type) {
 							"subtitle": "Test subtitle",
 							"buttons": [{
 								"type": "postback",
-								"title": "Red",
+								"title": "Red<http://www.redcross.org/images/MEDIA_CustomProductCatalog/m14540077_donor-thank-a-thon_phone-icon_40x40.jpg>",
 								"payload": "red"
 							}, {
 								"type": "postback",
@@ -181,7 +181,7 @@ app.post('/webhook/', function(req, res) {
       		continue
       	}
       	if (postbackVal ==="cancel") {
-      		sendTextMessage(sender, "cancel", token)
+      		sendTextMessage(sender, "cancel quiz", token)
       		continue
       	}
       	let text = JSON.stringify(event.postback)
