@@ -42,6 +42,10 @@ function sendGenericMessage(sender) {
 						"type": "postback",
 						"title": "Postback",
 						"payload": "Payload for first element in generic bubble"
+					},{
+						"type": "postback",
+						"title": "Quiz of Thing",
+						"payload": "quiz"
 					}] 
 				}, {
 					"title": "Second card",
@@ -109,6 +113,10 @@ app.post('/webhook/', function(req, res) {
           sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
       }
       if (event.postback) {
+      	if (event.postback.payload.toLowerCase() ==="quiz") {
+      		sendTextMessage(sender, "TODO: QUIZ", token)
+      		continue
+      	}
       	let text = JSON.stringify(event.postback)
       	sendTextMessage(sender, "Postbakc received: "+text.substring(0,200), token)
       	continue
