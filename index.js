@@ -68,6 +68,45 @@ function sendGenericMessage(sender, type) {
 		}
 	}
 
+	if (type==="test") {
+		messageData = {
+			"attachment": {
+				"type": "template",
+				"payload": {
+					"template_type": "generic",
+					"elements": [
+						{
+							"title": "Test title",
+							"subtitle": "Test subtitle",
+							"buttons": [{
+								"type": "postback",
+								"title": "Red",
+								"payload": "red"
+							}, {
+								"type": "postback",
+								"title": "Blue",
+								"payload": "blue"
+							},{
+								"type": "postback",
+								"title": "Cancel",
+								"payload": "cancel"
+							}] 
+						}, 
+						{
+							"title": "Second card",
+							"subtitle": "Element #2 of hscroll",
+							"buttons": [{
+								"type": "postback",
+		            "title": "Postback",
+		            "payload": "Payload for second element in a generic bubble",
+							}]
+						}
+					]
+				}
+			}
+		}
+	}
+
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
 		qs: {access_token: token},
@@ -112,6 +151,7 @@ app.post('/webhook/', function(req, res) {
   for (let i = 0; i < messaging_events.length; i++) {
       let event = req.body.entry[0].messaging[i]
       let sender = event.sender.id
+      // user sends message
       if (event.message && event.message.text) {
           let text = event.message.text.toLowerCase()
 
@@ -119,15 +159,29 @@ app.post('/webhook/', function(req, res) {
           	sendGenericMessage(sender, 'generic')
           	continue
           }
-          if (text === 'test' || text === 'quiz') {
-          	sendTextMessage(sender, 'prompt quiz')
+           // TODO: look for word combos or regex i.e. "i want to take test. can i take test? take quiz"
+          if (text === 'quiz') {
+          	sendTextMessage(sender, 'prompt quiz', token)
+          	continue
+          }
+
+          // Use to test structure
+          if (text === 'test') {
+          	sendGenericMessage(sender, 'test')
           	continue
           }
           sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
       }
+      // we send payload back
       if (event.postback) {
-      	if (event.postback.payload.toLowerCase() ==="quiz") {
+      	let postbackVal = event.postback.payload.toLowerCase();
+
+      	if (postbackVal ==="quiz") {
       		sendTextMessage(sender, "TODO: QUIZ " + quiz, token)
+      		continue
+      	}
+      	if (postbackVal ==="cancel") {
+      		sendTextMessage(sender, "cancel", token)
       		continue
       	}
       	let text = JSON.stringify(event.postback)
