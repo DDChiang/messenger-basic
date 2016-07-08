@@ -28,8 +28,10 @@ function sendTextMessage(sender, text) {
 }
 
 function sendGenericMessage(sender, type) {
+	var messageData;
+
 	if (type==="generic") {
-		let messageData = {
+		messageData = {
 			"attachment": {
 				"type": "template",
 				"payload": {
